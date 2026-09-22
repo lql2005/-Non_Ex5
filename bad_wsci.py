@@ -4,6 +4,9 @@ from pathlib import Path
 from ollama import chat
 
 
+MODEL = "qwen3:8b"
+
+
 question = """
 I changed my university password this morning.
 Now my Windows laptop won't connect to campus Wi-Fi,
@@ -18,7 +21,13 @@ for file in Path("knowledge").glob("*.txt"):
     context += "\n\n"
 
 ## Make a call to Qwen with student's question and the context from the knowledge base.
-
+response = chat(
+    model=MODEL,
+    messages=[
+        {"role": "system", "content": "You are a university IT support assistant. Answer using the provided knowledge base."},
+        {"role": "user", "content": f"Knowledge base:\n{context}\n\nStudent question:\n{question}"}
+    ]
+)
 
 
 ## Just for fun, print the total length of the context
@@ -28,3 +37,4 @@ print(
 )
 
 ## Print the response from Qwen
+print(response.message.content)
